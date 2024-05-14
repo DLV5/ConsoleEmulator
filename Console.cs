@@ -1,7 +1,6 @@
 ﻿using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Content;
 using Microsoft.Xna.Framework.Graphics;
-using System.Linq;
 
 namespace ConsoleEmulator
 {
@@ -9,7 +8,6 @@ namespace ConsoleEmulator
     {
         private string _defaultPrompt = "-->";
         private Grid _grid;
-        private Vector2 _currentCursorPosition;
 
         private ContentManager _content;
         private GraphicsDeviceManager _graphics;
@@ -20,7 +18,7 @@ namespace ConsoleEmulator
             _graphics = graphics;
             _spriteBatch = spriteBatch;
 
-            _grid = new Grid(new Vector2(60, 20));
+            _grid = new Grid(new Vector2(68, 18));
             _grid.Initialize(content, graphics);
         }
 

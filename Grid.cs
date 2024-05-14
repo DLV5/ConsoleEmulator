@@ -49,7 +49,7 @@ namespace ConsoleEmulator
             }
         }
 
-        public void DrawSymbol(GraphicsDeviceManager graphics, SpriteBatch spriteBatch)
+        public void DrawSymbols(GraphicsDeviceManager graphics, SpriteBatch spriteBatch)
         {
             for (int i = 0; i < _cells.Count; i++)
             {
@@ -65,21 +65,15 @@ namespace ConsoleEmulator
         {
             for (int i = 0; i < message.Length; i++)
             {
-                _cells[(int)(_currentCursorPosition.Y / Cell.Size.Y)][(int)(_currentCursorPosition.X / Cell.Size.X)].CreateBackgroundAndDraw(graphics, spriteBatch);
-                _cells[(int)(_currentCursorPosition.Y / Cell.Size.Y)][(int)(_currentCursorPosition.X / Cell.Size.X)].ChangeSymbol(message[i]);
-                _cells[(int)(_currentCursorPosition.Y / Cell.Size.Y)][(int)(_currentCursorPosition.X / Cell.Size.X)].DrawSymbol(spriteBatch);
-            }
-
-            MoveCursorToTheNextLine();
-        }
-        
-        public void DrawStringLine(GraphicsDeviceManager graphics, SpriteBatch spriteBatch, string message)
-        {
-            for (int i = 0; i < message.Length; i++)
-            {
-                if((int)_currentCursorPosition.X / Cell.Size.X + 1 >= _cells[0].Count)
+                if ((int)_currentCursorPosition.X / Cell.Size.X + 1 >= _cells[0].Count)
                 {
                     MoveCursorToTheNextLine();
+                }
+
+                if(_currentCursorPosition.Y / Cell.Size.Y + 1 >= _cells.Count)
+                {
+                    MoveAllOneRowUp(_cells);
+                    DrawSymbols(graphics, spriteBatch);
                 }
 
                 _cells[(int)(_currentCursorPosition.Y / Cell.Size.Y)][(int)(_currentCursorPosition.X / Cell.Size.X)].CreateBackgroundAndDraw(graphics, spriteBatch);
@@ -88,6 +82,11 @@ namespace ConsoleEmulator
 
                 MoveCursorToTheNextLeft(1);
             }
+        }
+        
+        public void DrawStringLine(GraphicsDeviceManager graphics, SpriteBatch spriteBatch, string message)
+        {
+            DrawString(graphics, spriteBatch, message);
 
             MoveCursorToTheNextLine();
         }
@@ -100,6 +99,32 @@ namespace ConsoleEmulator
         private void MoveCursorToTheNextLeft(int amout)
         {
             _currentCursorPosition = new Vector2(_currentCursorPosition.X + amout * Cell.Size.X, _currentCursorPosition.Y);
+        }
+
+        private void MoveAllOneRowUp(List<List<Cell>> cells)
+        {
+            for (int i = 0; i < cells.Count; i++)
+            {
+                for (int j = 0; j < cells[i].Count; j++)
+                {
+                    if (i == 0)
+                        break;
+
+                    char c = cells[i][j].Symbol.ToCharArray()[0];
+                    cells[i - 1][j].ChangeSymbol(c);
+                }
+                ClearRow(cells, i);
+            }
+
+            _currentCursorPosition = new Vector2(0, _currentCursorPosition.Y - Size.Y);
+        }
+
+        private void ClearRow(List<List<Cell>> cells, int rowIndex)
+        {
+            for (int i = 0; i < cells[rowIndex].Count; i++)
+            {
+                cells[rowIndex][i].ChangeSymbol(' ');
+            }
         }
     }
 }

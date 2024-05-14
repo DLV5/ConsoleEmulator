@@ -21,6 +21,8 @@ namespace ConsoleEmulator
 
         private Texture2D _rect;
 
+        public string Symbol { get => _symbol; }
+
         public Cell(int index, Vector2 position, char symbol, ContentManager content, GraphicsDeviceManager graphics)
         {
             _index = index;
