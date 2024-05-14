@@ -1,7 +1,6 @@
 ﻿using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Content;
 using Microsoft.Xna.Framework.Graphics;
-
 namespace ConsoleEmulator
 {
     internal class Console
@@ -20,13 +19,22 @@ namespace ConsoleEmulator
 
             _grid = new Grid(new Vector2(68, 18));
             _grid.Initialize(content, graphics);
+
+            _spriteBatch.Begin();
+            PrintString(_defaultPrompt);
+            _spriteBatch.End();
         }
 
-        public void PrintString(string text)
+        public void PrintStringLine(string text)
         {
             _grid.DrawString(_graphics, _spriteBatch, _defaultPrompt);
 
             _grid.DrawStringLine(_graphics, _spriteBatch, text);
+        }
+        
+        public void PrintString(string text)
+        {
+            _grid.DrawString(_graphics, _spriteBatch, text);
         }
     }
 }
