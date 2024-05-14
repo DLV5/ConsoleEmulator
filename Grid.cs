@@ -11,7 +11,7 @@ namespace ConsoleEmulator
 
         private List<List<Cell>> _cells = new List<List<Cell>>();
 
-        public Vector2 Size { get; }
+        public Vector2 Size { get => _size; }
 
         public Grid(Vector2 size)
         {
