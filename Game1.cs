@@ -37,8 +37,10 @@ namespace ConsoleEmulator
             _console = new Console(Content, _graphics, _spriteBatch);
 
             _spriteBatch.Begin();
-            _console.PrintString("Hello world! Hello world! Hello world! Hello world! Hello world!");
-            _console.PrintString("Hello world! Hello world! Hello world! Hello world! Hello world!");
+            _console.PrintString("Lorem ipsum dolor sit amet, consectetur adipiscing elit. Morbi vitae sem dapibus, vulputate sapien vel, v");
+            _console.PrintString("Mixture Mixture Mixture MixtureMixtureMixtureMixtureMixture");
+            _console.PrintString("Mixture Mixture Mixture MixtureMixtureMixtureMixtureMixture");
+            _console.PrintString("Mixture Mixture Mixture MixtureMixtureMixtureMixtureMixture");
             _spriteBatch.End();
         }
 

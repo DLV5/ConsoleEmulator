@@ -6,7 +6,7 @@ namespace ConsoleEmulator
 {
     internal class Cell
     {
-        public static Vector2 Size = new Vector2(16, 20);
+        public static Vector2 Size = new Vector2(10, 20);
 
         private int _index;
 

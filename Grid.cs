@@ -8,6 +8,7 @@ namespace ConsoleEmulator
     internal class Grid
     {
         private Vector2 _size;
+        private Vector2 _currentCursorPosition = Vector2.Zero;
 
         private List<List<Cell>> _cells = new List<List<Cell>>();
 
@@ -60,16 +61,45 @@ namespace ConsoleEmulator
             }
         }
         
-        public void DrawString(GraphicsDeviceManager graphics, SpriteBatch spriteBatch, Vector2 position, string message)
+        public void DrawString(GraphicsDeviceManager graphics, SpriteBatch spriteBatch, string message)
         {
             for (int i = 0; i < message.Length; i++)
             {
-                _cells[(int)position.Y][(int)position.X].CreateBackgroundAndDraw(graphics, spriteBatch);
-                _cells[(int)position.Y][(int)position.X].ChangeSymbol(message[i]);
-                _cells[(int)position.Y][(int)position.X].DrawSymbol(spriteBatch);
-
-                position.X += 1;
+                _cells[(int)(_currentCursorPosition.Y / Cell.Size.Y)][(int)(_currentCursorPosition.X / Cell.Size.X)].CreateBackgroundAndDraw(graphics, spriteBatch);
+                _cells[(int)(_currentCursorPosition.Y / Cell.Size.Y)][(int)(_currentCursorPosition.X / Cell.Size.X)].ChangeSymbol(message[i]);
+                _cells[(int)(_currentCursorPosition.Y / Cell.Size.Y)][(int)(_currentCursorPosition.X / Cell.Size.X)].DrawSymbol(spriteBatch);
             }
+
+            MoveCursorToTheNextLine();
+        }
+        
+        public void DrawStringLine(GraphicsDeviceManager graphics, SpriteBatch spriteBatch, string message)
+        {
+            for (int i = 0; i < message.Length; i++)
+            {
+                if((int)_currentCursorPosition.X / Cell.Size.X + 1 >= _cells[0].Count)
+                {
+                    MoveCursorToTheNextLine();
+                }
+
+                _cells[(int)(_currentCursorPosition.Y / Cell.Size.Y)][(int)(_currentCursorPosition.X / Cell.Size.X)].CreateBackgroundAndDraw(graphics, spriteBatch);
+                _cells[(int)(_currentCursorPosition.Y / Cell.Size.Y)][(int)(_currentCursorPosition.X / Cell.Size.X)].ChangeSymbol(message[i]);
+                _cells[(int)(_currentCursorPosition.Y / Cell.Size.Y)][(int)(_currentCursorPosition.X / Cell.Size.X)].DrawSymbol(spriteBatch);
+
+                MoveCursorToTheNextLeft(1);
+            }
+
+            MoveCursorToTheNextLine();
+        }
+
+        private void MoveCursorToTheNextLine()
+        {
+            _currentCursorPosition = new Vector2(0, _currentCursorPosition.Y + Cell.Size.Y);
+        }
+
+        private void MoveCursorToTheNextLeft(int amout)
+        {
+            _currentCursorPosition = new Vector2(_currentCursorPosition.X + amout * Cell.Size.X, _currentCursorPosition.Y);
         }
     }
 }

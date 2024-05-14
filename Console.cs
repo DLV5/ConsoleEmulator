@@ -20,57 +20,15 @@ namespace ConsoleEmulator
             _graphics = graphics;
             _spriteBatch = spriteBatch;
 
-            _grid = new Grid(new Vector2(41, 20));
+            _grid = new Grid(new Vector2(60, 20));
             _grid.Initialize(content, graphics);
         }
 
         public void PrintString(string text)
         {
-            _grid.DrawString(_graphics, _spriteBatch, _currentCursorPosition / Cell.Size.X, _defaultPrompt);
+            _grid.DrawString(_graphics, _spriteBatch, _defaultPrompt);
 
-            MoveCursorToTheNextLeft((int)(_defaultPrompt.Length * Cell.Size.X));
-
-            string message = text;
-
-            if(_currentCursorPosition.X + message.Length * Cell.Size.X > _grid.Size.X * Cell.Size.X)
-            {
-                string firstMessagePart = "";
-                string secondMessagePart = "";
-
-                for (int i = 0; i < message.Length; i++)
-                {
-                    if(_currentCursorPosition.X + i * Cell.Size.X > _grid.Size.X * Cell.Size.X)
-                    {
-                        firstMessagePart = message.Substring(0, i - 1);
-                        secondMessagePart = message.Substring(i);
-                        break;
-                    }
-                }
-
-                _grid.DrawString(_graphics, _spriteBatch, _currentCursorPosition / Cell.Size.X, firstMessagePart);
-
-                MoveCursorToTheNextLine();
-
-                _grid.DrawString(_graphics, _spriteBatch, _currentCursorPosition / Cell.Size.X, secondMessagePart);
-
-                MoveCursorToTheNextLine();
-            } else
-            {
-                _grid.DrawString(_graphics, _spriteBatch, _currentCursorPosition / Cell.Size.X, message);
-                MoveCursorToTheNextLine();
-            }
-
+            _grid.DrawStringLine(_graphics, _spriteBatch, text);
         }
-
-        private void MoveCursorToTheNextLine()
-        {
-            _currentCursorPosition = new Vector2(0, _currentCursorPosition.Y + Cell.Size.Y);
-        }
-        
-        private void MoveCursorToTheNextLeft(int amout)
-        {
-            _currentCursorPosition = new Vector2(_currentCursorPosition.X + amout, _currentCursorPosition.Y);
-        }
-       
     }
 }
