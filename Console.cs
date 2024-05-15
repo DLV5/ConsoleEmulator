@@ -17,6 +17,7 @@ namespace ConsoleEmulator
         private SpriteBatch _spriteBatch;
 
         private Timer _timer;
+        private int _numberOfPrintedSymbols = 0;
 
         public Console(ContentManager content, GraphicsDeviceManager graphics, SpriteBatch spriteBatch) {
             _content = content;
@@ -27,7 +28,7 @@ namespace ConsoleEmulator
             _grid.Initialize(content, graphics);
 
             _spriteBatch.Begin();
-            PrintString(_defaultPrompt);
+            PrintDefaultPrompt();
             _spriteBatch.End();
 
             InitTimer();
@@ -52,15 +53,27 @@ namespace ConsoleEmulator
 
             _grid.DrawStringLine(_graphics, _spriteBatch, text);
         }
-        
+
+        public void PrintDefaultPrompt()
+        {
+            _grid.DrawString(_graphics, _spriteBatch, _defaultPrompt);
+        }
+
         public void PrintString(string text)
         {
             _grid.DrawString(_graphics, _spriteBatch, text);
+
+            _numberOfPrintedSymbols++;
         }
 
         public void DeleteSymbol()
         {
+            if(_numberOfPrintedSymbols == 0) 
+                return;
+
             _grid.DeleteSymbol(_graphics, _spriteBatch);
+
+            _numberOfPrintedSymbols--;
         }
     }
 }

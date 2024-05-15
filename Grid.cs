@@ -2,7 +2,6 @@
 using Microsoft.Xna.Framework.Content;
 using Microsoft.Xna.Framework.Graphics;
 using System.Collections.Generic;
-using System.Diagnostics;
 
 namespace ConsoleEmulator
 {
@@ -72,16 +71,10 @@ namespace ConsoleEmulator
                (int)(_currentCursorPosition.Y / Cell.Size.Y)]
                [(int)(_currentCursorPosition.X / Cell.Size.X)];
 
-            //if ((int)_currentCursorPosition.X / Cell.Size.X + 1 >= _cells[0].Count)
-            //{
-            //    MoveCursorToTheNextLine();
-            //}
-
-            //if (_currentCursorPosition.Y / Cell.Size.Y + 1 >= _cells.Count)
-            //{
-            //    MoveAllOneRowUp(_cells);
-            //    DrawSymbols(graphics, spriteBatch);
-            //}
+            if ((int)_currentCursorPosition.X / Cell.Size.X - 1 <= 0)
+            {
+                MoveCursorToThePreviousLine();
+            }
 
             previousCell.CreateBackgroundAndDraw(graphics, spriteBatch);
 
@@ -146,6 +139,10 @@ namespace ConsoleEmulator
         private void MoveCursorToTheNextLine()
         {
             _currentCursorPosition = new Vector2(0, _currentCursorPosition.Y + Cell.Size.Y);
+        }
+        private void MoveCursorToThePreviousLine()
+        {
+            _currentCursorPosition = new Vector2(Cell.Size.X * Size.X, _currentCursorPosition.Y - Cell.Size.Y);
         }
 
         private void MoveCursorToTheNextRight(int amout)
