@@ -21,6 +21,7 @@ namespace ConsoleEmulator
 
         private Texture2D _rect;
 
+        public Color BackgroundColor { get => _backgroundColor; set => _backgroundColor = value; }
         public string Symbol { get => _symbol; }
 
         public Cell(int index, Vector2 position, char symbol, ContentManager content, GraphicsDeviceManager graphics)
@@ -49,16 +50,31 @@ namespace ConsoleEmulator
 
         public void DrawSymbol(SpriteBatch spriteBatch)
         {
-            spriteBatch.DrawString(_font, _symbol, _position, _symbolColor);
+            try
+            {
+                spriteBatch.DrawString(_font, _symbol, _position, _symbolColor);
+            } catch
+            {
+                spriteBatch.DrawString(_font, "o", _position, _symbolColor);
+            }
         }
 
         public void CreateBackgroundAndDraw(GraphicsDeviceManager graphics, SpriteBatch spriteBatch) 
         { 
             Color[] data = new Color[(int)(Size.X * Size.Y)];
-            for (int i = 0; i < data.Length; ++i) data[i] = Color.Chocolate;
+            for (int i = 0; i < data.Length; ++i) data[i] = Color.Black;
             _rect.SetData(data);
 
-            spriteBatch.Draw(_rect, _position, _backgroundColor);
+            spriteBatch.Draw(_rect, _position, Color.Black);
+        }
+        
+        public void CreateBackgroundAndDraw(GraphicsDeviceManager graphics, SpriteBatch spriteBatch, Color color) 
+        { 
+            Color[] data = new Color[(int)(Size.X * Size.Y)];
+            for (int i = 0; i < data.Length; ++i) data[i] = color;
+            _rect.SetData(data);
+
+            spriteBatch.Draw(_rect, _position, color);
         }
     }
 }

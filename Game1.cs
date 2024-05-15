@@ -35,6 +35,14 @@ namespace ConsoleEmulator
             var pressedKey = args.Key;
             char character = args.Character;
 
+            if (pressedKey == Keys.Back)
+            {
+                _spriteBatch.Begin();
+                _console.DeleteSymbol();
+                _spriteBatch.End();
+                return;
+            }
+
             _spriteBatch.Begin();
             _console.PrintString(character.ToString());
             _spriteBatch.End();

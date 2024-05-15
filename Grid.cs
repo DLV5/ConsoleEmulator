@@ -2,6 +2,7 @@
 using Microsoft.Xna.Framework.Content;
 using Microsoft.Xna.Framework.Graphics;
 using System.Collections.Generic;
+using System.Diagnostics;
 
 namespace ConsoleEmulator
 {
@@ -33,7 +34,7 @@ namespace ConsoleEmulator
                 _cells.Add(cells);
             }
         }
-        
+
         public void DrawEmpty(ContentManager content, GraphicsDeviceManager graphics)
         {
             for (int i = 0; i < _size.Y; i++)
@@ -60,6 +61,36 @@ namespace ConsoleEmulator
                 }
             }
         }
+
+        public void DeleteSymbol(GraphicsDeviceManager graphics, SpriteBatch spriteBatch)
+        {
+            var previousCell = _cells[
+               (int)(_currentCursorPosition.Y / Cell.Size.Y)]
+               [(int)(_currentCursorPosition.X / Cell.Size.X - 1)];
+            
+            var currentCell = _cells[
+               (int)(_currentCursorPosition.Y / Cell.Size.Y)]
+               [(int)(_currentCursorPosition.X / Cell.Size.X)];
+
+            //if ((int)_currentCursorPosition.X / Cell.Size.X + 1 >= _cells[0].Count)
+            //{
+            //    MoveCursorToTheNextLine();
+            //}
+
+            //if (_currentCursorPosition.Y / Cell.Size.Y + 1 >= _cells.Count)
+            //{
+            //    MoveAllOneRowUp(_cells);
+            //    DrawSymbols(graphics, spriteBatch);
+            //}
+
+            previousCell.CreateBackgroundAndDraw(graphics, spriteBatch);
+
+            currentCell.CreateBackgroundAndDraw(graphics, spriteBatch);
+            previousCell.ChangeSymbol(' ');
+            previousCell.DrawSymbol(spriteBatch);
+
+            MoveCursorToTheNextLeft(1);
+        }
         
         public void DrawString(GraphicsDeviceManager graphics, SpriteBatch spriteBatch, string message)
         {
@@ -80,7 +111,7 @@ namespace ConsoleEmulator
                 _cells[(int)(_currentCursorPosition.Y / Cell.Size.Y)][(int)(_currentCursorPosition.X / Cell.Size.X)].ChangeSymbol(message[i]);
                 _cells[(int)(_currentCursorPosition.Y / Cell.Size.Y)][(int)(_currentCursorPosition.X / Cell.Size.X)].DrawSymbol(spriteBatch);
 
-                MoveCursorToTheNextLeft(1);
+                MoveCursorToTheNextRight(1);
             }
         }
         
@@ -91,14 +122,40 @@ namespace ConsoleEmulator
             MoveCursorToTheNextLine();
         }
 
+        public void ToggleCursorBackground(GraphicsDeviceManager graphics, SpriteBatch spriteBatch)
+        {
+            var currentCell = _cells[
+                (int)(_currentCursorPosition.Y / Cell.Size.Y)]
+                [(int)(_currentCursorPosition.X / Cell.Size.X)];
+
+            if (currentCell.Symbol != " ")
+                return;
+
+            spriteBatch.Begin();
+
+
+            var color = currentCell.BackgroundColor == Color.Black ? Color.White : Color.Black;
+            currentCell.BackgroundColor = color;
+
+            currentCell.CreateBackgroundAndDraw(graphics, spriteBatch, color);
+            currentCell.DrawSymbol(spriteBatch);
+
+            spriteBatch.End();
+        }
+
         private void MoveCursorToTheNextLine()
         {
             _currentCursorPosition = new Vector2(0, _currentCursorPosition.Y + Cell.Size.Y);
         }
 
-        private void MoveCursorToTheNextLeft(int amout)
+        private void MoveCursorToTheNextRight(int amout)
         {
             _currentCursorPosition = new Vector2(_currentCursorPosition.X + amout * Cell.Size.X, _currentCursorPosition.Y);
+        }
+        
+        private void MoveCursorToTheNextLeft(int amout)
+        {
+            _currentCursorPosition = new Vector2(_currentCursorPosition.X - amout * Cell.Size.X, _currentCursorPosition.Y);
         }
 
         private void MoveAllOneRowUp(List<List<Cell>> cells)
